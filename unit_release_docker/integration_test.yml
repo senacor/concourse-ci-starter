@@ -1,0 +1,15 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: alpine
+    tag: 3.5
+
+inputs:
+- name: integration-suite
+- name: docker-ci-example-service
+
+run:
+  path: integration-suite/unit_release_docker/integration_test.sh
