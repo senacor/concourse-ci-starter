@@ -37,5 +37,5 @@ jobs:
     - get: docker-ci-example-service
       trigger: true
       passed: [ci-example-service]
-  - task: integration-test
+  - task: integration
     file: integration-suite/unit_release_docker/integration_test.yml

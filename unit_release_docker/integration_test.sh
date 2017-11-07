@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 ls -al docker-ci-example-service
 
