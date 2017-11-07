@@ -1,0 +1,40 @@
+---
+resources:
+- name: ci-example-service
+  type: git
+  source: 
+    uri: {{ci-example-service-git}}
+    username: {{git-username}}
+    password: {{git-password}}
+- name: integration-suite
+  type: git
+  source:
+    uri: {{integration-suite-git}}
+    username: {{git-username}}
+    password: {{git-password}}
+- name: docker-ci-example-service
+  type: docker-image
+  source:
+    repository: {{docker-hub-repository}}
+    username: {{docker-hub-username}}
+    password: {{docker-hub-password}}
+
+jobs:
+- name: ci-example-service
+  plan:
+  - get: ci-example-service
+    trigger: true
+  - task: unit-test
+    file: ci-example-service/ci/unit-test_cached_repo.yml
+  - put: docker-ci-example-service
+    params:
+      build: ci-example-service
+
+- name: integration-test
+  plan:
+  - aggregate:
+    - get: integration-suite
+    - get: docker-ci-example-service
+      passed: [ci-example-service]
+  - task: integration-test
+    file: integration-suite/unit_release_docker/integration_test.yml

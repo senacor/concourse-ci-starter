@@ -1,0 +1,9 @@
+git-username: <USERNAME>
+git-password: <PASSWORD>
+
+ci-example-service-git: <SERVICE-GIT-URI>
+integration-suite-git: <INTEGRATION-SUITE-GIT-URI>
+
+docker-hub-repository: <DOCKER-HUB-REPO>
+docker-hub-username: <DOCKER-HUB-USERNAME>
+docker-hub-password: <DOCKER-HUB-PASSWORD>
