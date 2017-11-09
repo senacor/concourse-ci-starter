@@ -6,16 +6,29 @@ resources:
     uri: {{ci-example-service-git}}
     username: {{git-username}}
     password: {{git-password}}
+- name: ci-other-service
+  type: git
+  source:
+    uri: {{ci-other-service-git}}
+    username: {{git-username}}
+    password: {{git-password}}
 - name: integration-suite
   type: git
   source:
     uri: {{integration-suite-git}}
     username: {{git-username}}
     password: {{git-password}}
+
 - name: docker-ci-example-service
   type: docker-image
   source:
     repository: {{docker-hub-repository}}
+    username: {{docker-hub-username}}
+    password: {{docker-hub-password}}
+- name: docker-ci-other-service
+  type: docker-image
+  source:
+    repository: {{docker-hub-other-repository}}
     username: {{docker-hub-username}}
     password: {{docker-hub-password}}
 
@@ -30,6 +43,18 @@ jobs:
     params:
       build: ci-example-service
 
+- name: ci-other-service
+  plan:
+  - get: ci-other-service
+    trigger: true
+  - task: unit-test
+    file: ci-other-service/ci/unit-test_cached_repo.yml
+    input_mapping:
+      ci-example-service: ci-other-service
+  - put: docker-ci-other-service
+    params:
+      build: ci-other-service
+
 - name: integration-test
   plan:
   - aggregate:
@@ -37,5 +62,8 @@ jobs:
     - get: docker-ci-example-service
       trigger: true
       passed: [ci-example-service]
+    - get: docker-ci-other-service
+      trigger: true
+      passed: [ci-other-service]
   - task: integration
     file: integration-suite/unit_release_docker/integration_test.yml
